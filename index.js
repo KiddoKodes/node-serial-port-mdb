@@ -9,7 +9,7 @@ const READ_ALL_BALANCE = "{1p}A1"
 
 class SerialPortInstance {
     constructor() {
-        this.ser = new SerialPort({ path: "/dev/ttyACM0", baudRate: 9600 })
+        this.ser = new SerialPort({ path: "/dev/ttyACM0", baudRate: 9600 }).setEncoding('utf8')
     }
     readSerial() {
         // Read data that is available but keep the stream in "paused mode"
@@ -30,7 +30,7 @@ class SerialPortInstance {
     }
     readBalance() {
         this.writeSerial(READ_ALL_BALANCE)
-        this.readSerial()
+        return this.readSerial()
     }
     enablePeripherals() {
         this.writeSerial(ENABLE_PERIPHERALS)
@@ -62,7 +62,7 @@ const instance = new SerialPortInstance()
 instance.startSerial()
 setInterval(() => {
     instance.readBalance()
-}, 100)
+}, 1000)
 export function disable() {
     instance.disablePeripherals()
 }
