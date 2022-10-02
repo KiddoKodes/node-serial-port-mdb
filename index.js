@@ -1,6 +1,6 @@
 import { SerialPort } from "serialport";
 import * as Windows1252 from "windows-1252"
-import crypto, { getRandomValues } from "crypto"
+import crypto from "crypto"
 // COMMAND DEFINITION
 const ENABLE_PERIPHERALS = '{1‡1}E9'
 const DISABLE_PERIPHERALS = '{1‡0}E8'
