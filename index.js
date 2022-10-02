@@ -13,9 +13,10 @@ class SerialPortInstance {
     }
     readSerial() {
         // Read data that is available but keep the stream in "paused mode"
-        this.ser.on('readable', function () {
-            console.log('Data:', this.ser.read())
-        })
+        // ser=this.ser
+        // this.ser.on('readable', function () {
+        //     console.log('Data:'+ser)
+        // })
 
         // Switches the port into "flowing mode"
         this.ser.on('data', function (data) {
