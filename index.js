@@ -60,6 +60,9 @@ class SerialPortInstance {
 }
 const instance = new SerialPortInstance()
 instance.startSerial()
+setTimeout(() => {
+    instance.readBalance()
+}, 100)
 export function disable() {
     instance.disablePeripherals()
 }
