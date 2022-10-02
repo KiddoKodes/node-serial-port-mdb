@@ -19,7 +19,6 @@ class SerialPortInstance {
         // Switches the port into "flowing mode"
         let readableData = "";
         this.ser.on('data', function (data) {
-            console.log('Data:', data)
             readableData = data
         })
         return readableData
@@ -31,6 +30,7 @@ class SerialPortInstance {
     readBalance() {
         this.writeSerial(READ_ALL_BALANCE)
         this.balance = this.readSerial()
+        console.log(this.balance)
         return this.balance
     }
     enablePeripherals() {
@@ -40,8 +40,8 @@ class SerialPortInstance {
         this.writeSerial(DISABLE_PERIPHERALS)
     }
     clearBalance() {
-        console.log(this.readBalance())
-        const inputString = String(this.readBalance()).split('1')[0]
+        console.log(this.balance)
+        const inputString = String(this.balance).split('1')[0]
         const outputString = Buffer.from(String('3180' + inputString), 'utf-8').toString();
         const checksum = crypto.createHash('sha256').update(outputString).digest('base64')
         const reset_cmd = '{1€' + inputString + '}' + checksum
@@ -65,9 +65,7 @@ instance.startSerial()
 setInterval(() => {
     instance.readBalance()
 }, 1000)
-export function disable() {
-    instance.disablePeripherals()
-}
+
 // UPDATE:
 // You can register a handler for process.on('exit') and in any other case(SIGINT or unhandled exception) to call process.exit()
 
