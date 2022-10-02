@@ -60,7 +60,7 @@ class SerialPortInstance {
 }
 const instance = new SerialPortInstance()
 instance.startSerial()
-setTimeout(() => {
+setInterval(() => {
     instance.readBalance()
 }, 100)
 export function disable() {
