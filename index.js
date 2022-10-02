@@ -46,7 +46,7 @@ class SerialPortInstance {
         this.writeSerial(reset_cmd)
     }
     startSerial() {
-        this.ser.open()
+        // this.ser.open()
         this.enablePeripherals()
         this.clearBalance()
     }
