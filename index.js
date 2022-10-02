@@ -27,7 +27,9 @@ class SerialPortInstance {
     }
     readBalance() {
         this.writeSerial(READ_ALL_BALANCE)
-        this.balance = this.readSerial((data) => data)
+        this.readSerial((data) => {
+            this.balance = data
+        })
         console.log(this.balance)
         return this.balance
     }
