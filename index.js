@@ -1,6 +1,6 @@
 import { SerialPort } from "serialport";
 import * as Windows1252 from "windows-1252"
-import crypto from "crypto"
+import crypto, { getRandomValues } from "crypto"
 // COMMAND DEFINITION
 const ENABLE_PERIPHERALS = '{1‡1}E9'
 const DISABLE_PERIPHERALS = '{1‡0}E8'
@@ -19,10 +19,12 @@ class SerialPortInstance {
         // })
 
         // Switches the port into "flowing mode"
+        let readableData = "";
         this.ser.on('data', function (data) {
             console.log('Data:', data)
-            return data
+            readableData = data
         })
+        return readableData
 
     }
     writeSerial(message) {
