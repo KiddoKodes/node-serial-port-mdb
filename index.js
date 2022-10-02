@@ -45,7 +45,7 @@ class SerialPortInstance {
         //{1€000{amount}{113+amount}.hex()}
         //113 is decimal for 72 hex checksum is modulo 256 of this 
         console.log(this.balance.split("}")[0].split("").reverse().join(""))
-        const amount = this.balance.split("}")[0].split("").reverse().join("").split("1")[1].split("").reverse().join("")
+        const amount = this.balance.split("}")[0].split("").reverse().join("")?.split("1")[1].split("").reverse().join("")
 
         const reset_cmd = '{1€' + amount + '}' + String(parseInt((113 + amount).toString(16), 16))
         console.log('rest me', reset_cmd)
