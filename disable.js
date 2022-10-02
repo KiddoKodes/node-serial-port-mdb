@@ -1,0 +1,3 @@
+import { disable } from ".";
+
+disable()

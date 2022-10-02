@@ -60,3 +60,6 @@ class SerialPortInstance {
 }
 const instance = new SerialPortInstance()
 instance.startSerial()
+export function disable() {
+    instance.disablePeripherals()
+}
