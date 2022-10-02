@@ -39,10 +39,12 @@ class SerialPortInstance {
     }
     clearBalance() {
         console.log(this.balance)
-        const inputString = String(this.balance).split('1')[0]
-        const outputString = Buffer.from(String('3180' + inputString), 'utf-8').toString();
-        const checksum = crypto.createHash('sha256').update(outputString).digest('base64')
-        const reset_cmd = '{1€' + inputString + '}' + checksum
+        //clear balance script format:
+        //{1€000{amount}{113+amount}.hex()}
+        //113 is decimal for 72 hex checksum is modulo 256 of this 
+        const amount = this.balance.split("").reverse().join("").split("1")[0].trimStart()
+
+        const reset_cmd = '{1€' + amount + '}' + String(parseInt((113 + amount).toString(16), 16))
         console.log('rest me', reset_cmd)
         this.writeSerial(reset_cmd)
     }
