@@ -12,16 +12,14 @@ class SerialPortInstance {
         this.ser = new SerialPort({ path: "/dev/ttyACM0", baudRate: 9600 }).setEncoding('utf8')
         this.balance = ""
     }
-    readSerial() {
+    readSerial(process) {
         // Read data that is available but keep the stream in "paused mode"
 
 
         // Switches the port into "flowing mode"
-        let readableData = "";
         this.ser.on('data', function (data) {
-            readableData = data
+            process(data)
         })
-        return readableData
 
     }
     writeSerial(message) {
@@ -29,7 +27,7 @@ class SerialPortInstance {
     }
     readBalance() {
         this.writeSerial(READ_ALL_BALANCE)
-        this.balance = this.readSerial()
+        this.balance = this.readSerial((data) => data)
         console.log(this.balance)
         return this.balance
     }
