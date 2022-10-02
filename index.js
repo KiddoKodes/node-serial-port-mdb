@@ -10,13 +10,11 @@ const READ_ALL_BALANCE = "{1p}A1"
 class SerialPortInstance {
     constructor() {
         this.ser = new SerialPort({ path: "/dev/ttyACM0", baudRate: 9600 }).setEncoding('utf8')
+        this.balance = ""
     }
     readSerial() {
         // Read data that is available but keep the stream in "paused mode"
-        // ser=this.ser
-        // this.ser.on('readable', function () {
-        //     console.log('Data:'+ser)
-        // })
+
 
         // Switches the port into "flowing mode"
         let readableData = "";
@@ -32,7 +30,8 @@ class SerialPortInstance {
     }
     readBalance() {
         this.writeSerial(READ_ALL_BALANCE)
-        return this.readSerial()
+        this.balance = this.readSerial()
+        return this.balance
     }
     enablePeripherals() {
         this.writeSerial(ENABLE_PERIPHERALS)
@@ -41,6 +40,7 @@ class SerialPortInstance {
         this.writeSerial(DISABLE_PERIPHERALS)
     }
     clearBalance() {
+        console.log(this.readBalance())
         const inputString = String(this.readBalance()).split('1')[0]
         const outputString = Buffer.from(String('3180' + inputString), 'utf-8').toString();
         const checksum = crypto.createHash('sha256').update(outputString).digest('base64')
@@ -51,7 +51,7 @@ class SerialPortInstance {
     startSerial() {
         // this.ser.open()
         this.enablePeripherals()
-        this.clearBalance()
+        // this.clearBalance()
     }
     stopSerial() {
         this.clearBalance()
@@ -68,3 +68,29 @@ setInterval(() => {
 export function disable() {
     instance.disablePeripherals()
 }
+// UPDATE:
+// You can register a handler for process.on('exit') and in any other case(SIGINT or unhandled exception) to call process.exit()
+
+process.stdin.resume();//so the program will not close instantly
+
+function exitHandler(options, exitCode) {
+    if (options.cleanup) {
+        console.log("Cleanup!")
+        instance.stopSerial()
+    }
+    if (exitCode || exitCode === 0) console.log(exitCode);
+    if (options.exit) process.exit();
+}
+
+//do something when app is closing
+process.on('exit', exitHandler.bind(null, { cleanup: true }));
+
+//catches ctrl+c event
+process.on('SIGINT', exitHandler.bind(null, { exit: true }));
+
+// catches "kill pid" (for example: nodemon restart)
+process.on('SIGUSR1', exitHandler.bind(null, { exit: true }));
+process.on('SIGUSR2', exitHandler.bind(null, { exit: true }));
+
+//catches uncaught exceptions
+process.on('uncaughtException', exitHandler.bind(null, { exit: true }));
